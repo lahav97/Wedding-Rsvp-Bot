@@ -14,8 +14,7 @@ class AwaitingRsvpState(BaseState):
 
         if "כן" in message:
             guest.is_attending = True
-            response = ("איזה כיף שאתם מגיעים! 🙌"
-                        "כמה אנשים מגיעים?")
+            response = f"איזה כיף {guest.guest_name}! 🙌\n\nכמה אנשים מגיעים?"
             next_state = AwaitingCountState()
             return (response, next_state)
         elif "לא" in message:

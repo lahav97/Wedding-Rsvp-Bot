@@ -10,6 +10,7 @@ class Guest:
     is_attending: Optional[bool] = None
     guest_count: Optional[int] = None
     dietary_preferences: Optional[str] = None
+    guest_name: Optional[str] = None
 
     # Determines if RSVP data collection is complete.
     def is_complete(self) -> bool:
@@ -19,7 +20,7 @@ class Guest:
 
         # If not attending, we're done - don't need count or dietary
         if self.is_attending is False:
-            return False
+            return True
 
         # If attending, need both count and dietary preferences
         return (
@@ -28,18 +29,22 @@ class Guest:
         )
 
     def to_dict(self) -> dict:
-        ''' Returns a dict representation of this Guest. '''
+        """ Returns a dict representation of this Guest. """
         return {
             'phone_number': self.phone_number,
             'is_attending': self.is_attending,
             'guest_count': self.guest_count,
+            'dietary_preferences': self.dietary_preferences,
+            'guest_name': self.guest_name
         }
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Guest':
-        ''' Returns a Guest from a dict representation. '''
+        """ Returns a Guest from a dict representation. """
         return cls(
             phone_number=data['phone_number'],
             is_attending=data['is_attending'],
             guest_count=data['guest_count'],
+            dietary_preferences=data.get('dietary_preferences'),
+            guest_name=data.get('guest_name')
         )

@@ -20,7 +20,13 @@ class ConversationService:
 
     def process_message(self, phone_number: str, message: str) -> str:
         guest = self._get_or_create_guest(phone_number)
+
+        if guest.guest_name is None:
+            guest.guest_name = self.sheets_service.get_guest_name(phone_number)
+
         current_state = self._get_or_create_state(phone_number)
+
+        print(f"📱 Processing message from {phone_number} in state {current_state.get_state_name().name}: {message}")
         response, next_state = current_state.handle_message(guest, message)
         self.states[phone_number] = next_state
 
@@ -37,8 +43,8 @@ class ConversationService:
     def _get_or_create_state(self, phone_number: str) -> BaseState:
         if phone_number not in self.states:
             self.states[phone_number] = AwaitingRsvpState()
-        return_state = self.states[phone_number]
+        return self.states[phone_number]
 
     def _save_to_sheets(self, guest: Guest) -> None:
         """Save completed RSVP to Google Sheets."""
-        self.sheets_service.save_sheet(guest.to_dict())
+        self.sheets_service.update_rsvp(guest.to_dict())

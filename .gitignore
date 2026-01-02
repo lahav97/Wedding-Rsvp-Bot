@@ -15,4 +15,5 @@ __pycache__/
 
 # Credentials
 credentials.json
-*.json
+*-credentials.json
+service-account*.json
